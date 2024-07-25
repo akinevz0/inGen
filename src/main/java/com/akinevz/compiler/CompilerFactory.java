@@ -2,15 +2,13 @@ package com.akinevz.compiler;
 
 public class CompilerFactory {
 
-    private final ICompiler pandocInstance = Pandoc.instance();
+    private static final ICompiler pandocInstance = Pandoc.instance();
 
-    public ICompiler getInstance(String name) throws UnsupportedCompilerException {
-        switch (name) {
-            case "pandoc":
-                return this.pandocInstance;
-            default:
-                throw new UnsupportedCompilerException(name);
-        }
+    public ICompiler getInstance(final String name) throws UnsupportedCompilerException {
+        return switch (name) {
+            case "pandoc" -> pandocInstance;
+            default -> throw new UnsupportedCompilerException(name);
+        };
     }
-    
+
 }
