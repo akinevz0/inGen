@@ -1,0 +1,6 @@
+{
+    "java.test.config": {
+        "name": "jUnit5"
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

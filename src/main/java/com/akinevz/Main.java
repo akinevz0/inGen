@@ -6,8 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.akinevz.compiler.UnsupportedCompilerException;
+import com.akinevz.install.DependenciesUnsatisfiedException;
 import com.akinevz.install.DependencyResolver;
 import com.akinevz.install.PlatformUnupportedException;
+import com.akinevz.template.TemplateFile;
 
 public class Main implements Runnable, AutoCloseable {
     static final Logger logger = Logger.getLogger(Main.class.getName());
@@ -30,16 +33,18 @@ public class Main implements Runnable, AutoCloseable {
     @Override
     public void run() {
         try {
-            var dr = new DependencyResolver();
-
-            var dependencies = new String[] { "texlive-latex-extra", "pandoc" };
-            if (!dr.ensureHas(dependencies)) {
-                throw new DependenciesUnsatisfiedException(dependencies);
-            }
+            var dr = new DependencyResolver("texlive-latex-extra", "pandoc");
+            var tf = new TemplateFile("tex.invoice");
             logger.log(Level.INFO, "All packages installed");
-        } catch (DependenciesUnsatisfiedException | PlatformUnupportedException ex) {
-            logger.log(Level.WARNING, "Unable to continue due to: ");
-            ex.printStackTrace();
+
+            var template = tf.getTemplate();
+            logger.log(Level.INFO, "Template loaded");
+
+            var compilerF = dr.getCompilerFactory();
+            var compiler = compilerF.getInstance("pandoc");
+
+        } catch (UnsupportedCompilerException | DependenciesUnsatisfiedException | PlatformUnupportedException ex) {
+            logger.log(Level.WARNING, "Unable to continue due to: ", ex);
         } catch (IOException | InterruptedException ex) {
             logger.log(Level.SEVERE, "Unhandled exception: ", ex);
         }

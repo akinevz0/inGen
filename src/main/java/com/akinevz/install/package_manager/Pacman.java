@@ -1,10 +1,18 @@
 package com.akinevz.install.package_manager;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import com.akinevz.Command;
+
 public class Pacman implements IPackageManager {
 
+    private final static String PACMAN = "pacman";
+
     @Override
-    public boolean hasInstalled(String packageName) {
-        throw new UnsupportedOperationException("Unimplemented method 'hasInstalled'");
+    public boolean hasInstalled(String packageName) throws IOException, InterruptedException {
+        var command = new Command(PACMAN, "-Ql", packageName);
+        return command.getExitCode() == 0;
     }
 
     @Override
@@ -13,9 +21,16 @@ public class Pacman implements IPackageManager {
     }
 
     @Override
-    public void install(String packageName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'install'");
+    public void install(String packageName) throws PackageInstallException {
+        Command command;
+        try {
+            command = new Command(PACMAN, "-Sy", packageName);
+            if (!(command.getExitCode() == 0))
+                throw new PackageInstallException(packageName, command.getError());
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            throw new PackageInstallException(packageName, e);
+        }
+
     }
 
 }

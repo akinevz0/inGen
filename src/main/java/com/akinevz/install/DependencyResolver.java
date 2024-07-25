@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
+import com.akinevz.compiler.CompilerFactory;
 import com.akinevz.install.package_manager.IPackageManager;
 import com.akinevz.install.package_manager.PackageInstallException;
 import com.akinevz.install.platform.IPlatform;
@@ -15,15 +16,21 @@ import com.akinevz.install.platform.IPlatform;
 public class DependencyResolver {
 
     private static final Set<String> SUPPORTED_PACKAGE_MANAGERS = Set.of(
-            "apt"
-    // , "pacman"
-    );
+            "apt", "pacman");
 
-    private Optional<IPackageManager> localPackageManager;
+    private final Optional<IPackageManager> localPackageManager;
 
-    public DependencyResolver() throws PlatformUnupportedException, IOException {
+    private final CompilerFactory compilerFactory;
+
+    public DependencyResolver(String... packageNames)
+            throws IOException, InterruptedException, PlatformUnupportedException, DependenciesUnsatisfiedException  {
         super();
         localPackageManager = getLocalPackageManager();
+        compilerFactory = new CompilerFactory();
+
+        if (!ensureHas(packageNames)) {
+            throw new DependenciesUnsatisfiedException(packageNames);
+        }
     }
 
     public boolean ensureHas(String... packageNames) throws IOException, InterruptedException {
@@ -60,6 +67,10 @@ public class DependencyResolver {
 
     private Optional<IPlatform> getPlatform() throws PlatformUnupportedException, IOException {
         return IPlatform.getLocalPlatform();
+    }
+
+    public CompilerFactory getCompilerFactory() {
+        return compilerFactory;
     }
 
 }
