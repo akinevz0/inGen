@@ -1,5 +1,8 @@
 package com.akinevz.template;
 
-public interface ITemplate {
+import java.nio.file.Path;
 
+@FunctionalInterface
+public interface ITemplate {
+    Path getPath();
 }

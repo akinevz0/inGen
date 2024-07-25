@@ -10,9 +10,9 @@ public class Apt implements IPackageManager {
     private final static String DPKG = "dpkg";
 
     @Override
-    public boolean hasInstalled(String packageName) throws IOException, InterruptedException {
-        // TODO: check which dpkg command gets the installed package information 
-        var command = new Command(DPKG, "-s", packageName);
+    public boolean hasInstalled(final String packageName) throws IOException, InterruptedException {
+        // TODO: check which dpkg command gets the installed package information
+        final var command = new Command(DPKG, "-s", packageName);
         return command.getExitCode() == 0;
     }
 
@@ -22,7 +22,7 @@ public class Apt implements IPackageManager {
     }
 
     @Override
-    public void install(String packageName) throws PackageInstallException {
+    public void install(final String packageName) throws PackageInstallException {
         Command command;
         try {
             command = new Command(getName(), "install", packageName);

@@ -12,12 +12,12 @@ public class Command {
     private final Future<String[]> errors;
     private final Process process;
 
-    public Command(String... args) throws IOException {
-        var es = Main.es;
-        var builder = new ProcessBuilder(args);
+    public Command(final String... args) throws IOException {
+        final var es = Main.es;
+        final var builder = new ProcessBuilder(args);
         this.process = builder.start();
-        var outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        var errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        final var outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        final var errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         this.output = es.submit(() -> outputReader.lines().toArray(String[]::new));
         this.errors = es.submit(() -> errorReader.lines().toArray(String[]::new));
     }

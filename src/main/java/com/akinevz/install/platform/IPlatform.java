@@ -15,15 +15,12 @@ import com.akinevz.install.package_manager.Pacman;
 
 public interface IPlatform {
 
-    static Optional<IPackageManager> getPackageManager(String platformName) throws PlatformUnupportedException {
-        switch (platformName) {
-            case "apt":
-                return Optional.of(new Apt());
-            case "pacman":
-                return Optional.of(new Pacman());
-            default:
-                return Optional.empty();
-        }
+    static Optional<IPackageManager> getPackageManager(final String platformName) throws PlatformUnupportedException {
+        return switch (platformName) {
+            case "apt" -> Optional.of(new Apt());
+            case "pacman" -> Optional.of(new Pacman());
+            default -> Optional.empty();
+        };
     }
 
     static Optional<IPlatform> getLocalPlatform() throws PlatformUnupportedException, IOException {
@@ -34,27 +31,25 @@ public interface IPlatform {
     }
 
     static IPlatform getLinuxPlatformInfo() throws IOException, PlatformUnupportedException {
-        var runtime = Runtime.getRuntime();
-        var getOsRelease = runtime.exec("cat /etc/os-release");
-        StringBuilder output = new StringBuilder();
-        BufferedReader outputReader = new BufferedReader(new InputStreamReader(getOsRelease.getInputStream()));
+        final var runtime = Runtime.getRuntime();
+        final var getOsRelease = runtime.exec("cat /etc/os-release");
+        final StringBuilder output = new StringBuilder();
+        final BufferedReader outputReader = new BufferedReader(new InputStreamReader(getOsRelease.getInputStream()));
         outputReader.lines().forEach(line -> {
             if (line.startsWith("NAME"))
                 output.append(getLinuxPlatformName(line));
         });
-        String platformName = output.toString();
-        switch (platformName) {
-            case "Debian GNU/Linux":
-                return new Debian();
-            default:
-                return new UnsupportedPlatform(platformName);
-        }
+        final String platformName = output.toString();
+        return switch (platformName) {
+            case "Debian GNU/Linux" -> new Debian();
+            default -> new UnsupportedPlatform(platformName);
+        };
     }
 
-    static String getLinuxPlatformName(String line) {
-        var pattern =  Pattern.compile("NAME=\"(.*)\"");
-        var matcher = pattern.matcher(line);
-        if(matcher.matches()){
+    static String getLinuxPlatformName(final String line) {
+        final var pattern = Pattern.compile("NAME=\"(.*)\"");
+        final var matcher = pattern.matcher(line);
+        if (matcher.matches()) {
             return matcher.group(1);
         }
         return null;

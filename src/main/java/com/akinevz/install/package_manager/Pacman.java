@@ -10,8 +10,8 @@ public class Pacman implements IPackageManager {
     private final static String PACMAN = "pacman";
 
     @Override
-    public boolean hasInstalled(String packageName) throws IOException, InterruptedException {
-        var command = new Command(PACMAN, "-Ql", packageName);
+    public boolean hasInstalled(final String packageName) throws IOException, InterruptedException {
+        final var command = new Command(PACMAN, "-Ql", packageName);
         return command.getExitCode() == 0;
     }
 
@@ -21,7 +21,7 @@ public class Pacman implements IPackageManager {
     }
 
     @Override
-    public void install(String packageName) throws PackageInstallException {
+    public void install(final String packageName) throws PackageInstallException {
         Command command;
         try {
             command = new Command(PACMAN, "-Sy", packageName);

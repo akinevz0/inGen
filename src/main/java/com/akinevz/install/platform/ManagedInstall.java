@@ -7,16 +7,16 @@ import com.akinevz.install.package_manager.PackageInstallException;
 
 public class ManagedInstall implements IPackageManager {
 
-    private String installName;
-    private ManagedInstallAdapter packages;
+    private final String installName;
+    private final ManagedInstallAdapter packages;
 
-    public ManagedInstall(String name) {
+    public ManagedInstall(final String name) {
         this.installName = name;
         this.packages = new ManagedInstallAdapter();
     }
 
     @Override
-    public boolean hasInstalled(String packageName) throws IOException, InterruptedException {
+    public boolean hasInstalled(final String packageName) throws IOException, InterruptedException {
         return packages.contains(packageName);
     }
 
@@ -26,7 +26,7 @@ public class ManagedInstall implements IPackageManager {
     }
 
     @Override
-    public void install(String packageName) throws PackageInstallException {
+    public void install(final String packageName) throws PackageInstallException {
         throw new UnsupportedOperationException("Unsupported method 'install' for a managed install");
     }
 

@@ -4,9 +4,9 @@ import com.akinevz.install.package_manager.IPackageManager;
 
 public class UnsupportedPlatform implements IPlatform {
 
-    private String name;
+    private final String name;
 
-    public UnsupportedPlatform(String name) {
+    public UnsupportedPlatform(final String name) {
         this.name = name;
     }
 

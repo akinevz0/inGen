@@ -22,8 +22,8 @@ public class DependencyResolver {
 
     private final CompilerFactory compilerFactory;
 
-    public DependencyResolver(String... packageNames)
-            throws IOException, InterruptedException, PlatformUnupportedException, DependenciesUnsatisfiedException  {
+    public DependencyResolver(final String... packageNames)
+            throws IOException, InterruptedException, PlatformUnupportedException, DependenciesUnsatisfiedException {
         super();
         localPackageManager = getLocalPackageManager();
         compilerFactory = new CompilerFactory();
@@ -33,25 +33,25 @@ public class DependencyResolver {
         }
     }
 
-    public boolean ensureHas(String... packageNames) throws IOException, InterruptedException {
-        var packageManager = localPackageManager.get();
-        for (String pkg : packageNames) {
+    public boolean ensureHas(final String... packageNames) throws IOException, InterruptedException {
+        final var packageManager = localPackageManager.get();
+        for (final String pkg : packageNames) {
             if (!packageManager.hasInstalled(pkg))
                 return false;
         }
         return true;
     }
 
-    public void install(String... packageNames) throws PackageInstallException {
-        var packageManager = localPackageManager.get();
+    public void install(final String... packageNames) throws PackageInstallException {
+        final var packageManager = localPackageManager.get();
         packageManager.installMultiple(packageNames);
     }
 
     private Optional<IPackageManager> getLocalPackageManager() throws PlatformUnupportedException, IOException {
-        var platform = getPlatform();
-        var supported = getSupportedPackageManagers();
+        final var platform = getPlatform();
+        final var supported = getSupportedPackageManagers();
 
-        var packageManagerName = platform
+        final var packageManagerName = platform
                 .map(IPlatform::getPackageManager)
                 .map(IPackageManager::getName)
                 .filter(supported::contains);

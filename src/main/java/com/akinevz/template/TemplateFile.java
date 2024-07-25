@@ -4,20 +4,18 @@ import java.nio.file.Path;
 
 public class TemplateFile {
 
-    private String filename;
+    private final Path file;
 
-    public TemplateFile(String filename) {
-        this.filename = filename;
+    public TemplateFile(final String filename) {
+        this.file = Path.of(filename);
     }
 
     public ITemplate getTemplate() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTemplate'");
+        return () -> file;
     }
 
     public Path getSourceFolder() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSourceFolder'");
+        return file.getParent();
     }
 
 }

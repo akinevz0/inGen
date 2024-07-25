@@ -6,7 +6,7 @@ public class PlatformUnupportedException extends Exception {
         super("InvoiceGen does not support your platform yet");
     }
 
-    public PlatformUnupportedException(String string) {
+    public PlatformUnupportedException(final String string) {
         super(string);
     }
 

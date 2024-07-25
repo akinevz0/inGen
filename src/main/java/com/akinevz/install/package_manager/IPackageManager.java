@@ -11,8 +11,8 @@ public interface IPackageManager {
 
     String getName();
 
-    default void installMultiple(String[] packageNames) throws PackageInstallException {
-        for (String packageString : packageNames) {
+    default void installMultiple(final String[] packageNames) throws PackageInstallException {
+        for (final String packageString : packageNames) {
             install(packageString);
         }
     }
