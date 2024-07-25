@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class Command {
@@ -12,8 +13,7 @@ public class Command {
     private final Future<String[]> errors;
     private final Process process;
 
-    public Command(final String... args) throws IOException {
-        final var es = Main.es;
+    public Command(final ExecutorService es, final String... args) throws IOException {
         final var builder = new ProcessBuilder(args);
         this.process = builder.start();
         final var outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

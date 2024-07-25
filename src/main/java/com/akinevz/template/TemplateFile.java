@@ -2,7 +2,7 @@ package com.akinevz.template;
 
 import java.nio.file.Path;
 
-public class TemplateFile {
+public class TemplateFile implements ITemplate {
 
     private final Path file;
 
@@ -10,12 +10,13 @@ public class TemplateFile {
         this.file = Path.of(filename);
     }
 
-    public ITemplate getTemplate() {
-        return () -> file;
+    public TemplateFile(final Path file) {
+        this.file = file;
     }
 
-    public Path getSourceFolder() {
-        return file.getParent();
+    @Override
+    public Path getPath() {
+        return file;
     }
 
 }

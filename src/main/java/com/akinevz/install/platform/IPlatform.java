@@ -9,28 +9,27 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.SystemUtils;
 
 import com.akinevz.install.PlatformUnupportedException;
-import com.akinevz.install.package_manager.Apt;
 import com.akinevz.install.package_manager.IPackageManager;
-import com.akinevz.install.package_manager.Pacman;
 
 public interface IPlatform {
 
-    static Optional<IPackageManager> getPackageManager(final String platformName) throws PlatformUnupportedException {
+    static final Debian debian = new Debian();
+
+    static Optional<IPlatform> getPlatform(final String platformName) throws PlatformUnupportedException {
         return switch (platformName) {
-            case "apt" -> Optional.of(new Apt());
-            case "pacman" -> Optional.of(new Pacman());
+            case "Debian GNU/Linux" -> Optional.of(debian);
             default -> Optional.empty();
         };
     }
 
     static Optional<IPlatform> getLocalPlatform() throws PlatformUnupportedException, IOException {
         if (SystemUtils.IS_OS_LINUX) {
-            return Optional.of(getLinuxPlatformInfo());
+            return getLinuxPlatformName();
         }
         return Optional.empty();
     }
 
-    static IPlatform getLinuxPlatformInfo() throws IOException, PlatformUnupportedException {
+    static Optional<IPlatform> getLinuxPlatformName() throws IOException, PlatformUnupportedException {
         final var runtime = Runtime.getRuntime();
         final var getOsRelease = runtime.exec("cat /etc/os-release");
         final StringBuilder output = new StringBuilder();
@@ -40,10 +39,7 @@ public interface IPlatform {
                 output.append(getLinuxPlatformName(line));
         });
         final String platformName = output.toString();
-        return switch (platformName) {
-            case "Debian GNU/Linux" -> new Debian();
-            default -> new UnsupportedPlatform(platformName);
-        };
+        return getPlatform(platformName);
     }
 
     static String getLinuxPlatformName(final String line) {
@@ -57,6 +53,6 @@ public interface IPlatform {
 
     String getName();
 
-    IPackageManager getPackageManager();
+    IPackageManager packageManager();
 
 }

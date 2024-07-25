@@ -2,17 +2,24 @@ package com.akinevz.install.package_manager;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.akinevz.Command;
 
-public class Apt implements IPackageManager {
+public class Apt implements IPackageManager, AutoCloseable {
 
     private final static String DPKG = "dpkg";
+    private final ExecutorService es;
+
+    public Apt() {
+        this.es = Executors.newFixedThreadPool(2);
+    }
 
     @Override
     public boolean hasInstalled(final String packageName) throws IOException, InterruptedException {
         // TODO: check which dpkg command gets the installed package information
-        final var command = new Command(DPKG, "-s", packageName);
+        final var command = new Command(es, DPKG, "-s", packageName);
         return command.getExitCode() == 0;
     }
 
@@ -25,12 +32,17 @@ public class Apt implements IPackageManager {
     public void install(final String packageName) throws PackageInstallException {
         Command command;
         try {
-            command = new Command(getName(), "install", packageName);
+            command = new Command(es, getName(), "install", packageName);
             if (!(command.getExitCode() == 0))
                 throw new PackageInstallException(packageName, command.getError());
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new PackageInstallException(packageName, e);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        es.shutdown();
     }
 
 }

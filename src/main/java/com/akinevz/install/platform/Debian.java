@@ -1,5 +1,6 @@
 package com.akinevz.install.platform;
 
+import com.akinevz.install.package_manager.Apt;
 import com.akinevz.install.package_manager.IPackageManager;
 
 public class Debian implements IPlatform {
@@ -10,8 +11,8 @@ public class Debian implements IPlatform {
     }
 
     @Override
-    public IPackageManager getPackageManager() {
-        return IPackageManager.APT;
+    public IPackageManager packageManager() {
+        return new Apt();
     }
 
 }

@@ -1,9 +1,15 @@
 package com.akinevz.compiler;
 
+import java.nio.file.Path;
+
+import com.akinevz.template.TemplateFile;
+
 public interface ICompiler {
 
-    String getCompilerName();
+    String getName();
 
-    String getCompilerCommand();
+    String getCommand();
+
+    void compile(Path in, TemplateFile tf, Path out);
 
 }

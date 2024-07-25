@@ -11,7 +11,7 @@ public class UnsupportedPlatform implements IPlatform {
     }
 
     @Override
-    public IPackageManager getPackageManager() {
+    public IPackageManager packageManager() {
         return new ManagedInstall(name);
     }
 

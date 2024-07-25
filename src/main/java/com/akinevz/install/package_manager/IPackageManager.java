@@ -4,9 +4,6 @@ import java.io.IOException;
 
 public interface IPackageManager {
 
-    IPackageManager APT = new Apt();
-    IPackageManager PACMAN = new Pacman();
-
     boolean hasInstalled(String packageName) throws IOException, InterruptedException;
 
     String getName();

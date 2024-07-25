@@ -2,9 +2,11 @@ package com.akinevz.compiler;
 
 import java.util.Optional;
 
-public class Pandoc implements ICompiler {
+import com.akinevz.compiler.CompilerFactory.InstanceType;
 
-    private static Optional<Pandoc> instance;
+public class Pandoc extends LocalCompiler {
+
+    private static Optional<Pandoc> instance = Optional.empty();
 
     public static Pandoc instance() {
         if (!instance.isPresent()) {
@@ -13,20 +15,8 @@ public class Pandoc implements ICompiler {
         return instance.get();
     }
 
-    private String compilerCommand;
-
     public Pandoc() {
-        super();
-    }
-
-    @Override
-    public String getCompilerName() {
-        return "pandoc";
-    }
-
-    @Override
-    public String getCompilerCommand() {
-        return this.compilerCommand;
+        super(InstanceType.Pandoc);
     }
 
 }
