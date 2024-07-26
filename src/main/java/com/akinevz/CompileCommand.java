@@ -1,5 +1,7 @@
 package com.akinevz;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -16,22 +18,23 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "inGen", mixinStandardHelpOptions = true, version = "0.1", description = "Generates an invoice using tex.invoice")
+@Command(name = "inGen", mixinStandardHelpOptions = true, version = "0.1", description = "Generates an invoice using default.invoice")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
 
     @Parameters(index = "0", description = "Input file path")
-    private Path in;
+    private Path inPath;
 
     @Parameters(index = "1", description = "Output file or Template file path", defaultValue = "tex.invoice", arity = "0..1")
-    private Path template;
+    private Path tfPath;
 
-    @Parameters(index = "2", description = "Output file path", arity = "0..1")
-    private Path outFileName;
+    @Parameters(index = "2", description = "Output file path (see pandoc manual for supported formats)", arity = "0..1")
+    private Path outPath;
 
     @Override
     public Integer call() throws Exception {
+        // package management
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
         try {
             final var dr = new DependencyResolver();
@@ -44,22 +47,30 @@ public class CompileCommand implements Callable<Integer> {
             return -1;
         }
 
-        final var tf = new TemplateFile(template);
-        logger.log(Level.INFO, "Template loaded");
+        // check if infile exists
+        if (!Files.exists(inPath))
+            throw new FileNotFoundException(inPath.toString());
 
+        // load template
+        final var tf = new TemplateFile(tfPath);
+        logger.log(Level.INFO, tf + " loaded");
+
+        // acquire handle to pandoc
         final var c = CompilerFactory.getCompiler(InstanceType.Pandoc);
         logger.log(Level.INFO, "Pandoc loaded");
 
-        final var out = (outFileName == null) ? (template == null) ? makeOutput(in) : template : outFileName;
+        // get output path
+        final var out = (outPath == null) ? makeOutput() : outPath;
         logger.log(Level.INFO, "Writing to " + out.toString());
 
-        c.compile(in, tf, out);
+        // compile template
+        c.compile(inPath, tf, out);
         return 0;
     }
 
-    private Path makeOutput(final Path in) {
-        final var filename = in.getFileName().toString();
-        final var output = in.resolveSibling(filename + ".pdf");
+    private Path makeOutput() {
+        final var filename = inPath.getFileName().toString();
+        final var output = inPath.resolveSibling(filename + ".pdf");
         return output;
     }
 
