@@ -1,7 +1,5 @@
 package com.akinevz;
 
-import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -47,10 +45,10 @@ public class CompileCommand implements Callable<Integer> {
             return -1;
         }
 
-        // check if infile exists
-        if (!Files.exists(inPath))
-            throw new FileNotFoundException(inPath.toString());
-
+        // check if infile exists which should be a YAML
+        // TODO: parse yaml
+        final var in = new InputFile(inPath);
+        logger.log(Level.INFO, in + " loaded");
         // load template
         final var tf = new TemplateFile(tfPath);
         logger.log(Level.INFO, tf + " loaded");

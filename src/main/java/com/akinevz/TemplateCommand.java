@@ -18,15 +18,25 @@ public class TemplateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        final var source = Paths.get(this.getClass().getResource("/invoice_template.tex").getPath());
+        final var source = Paths.get(
+                this.getClass()
+                        .getResource("/invoice_template.tex")
+                        .getPath());
         logger.log(Level.INFO, "source path is " + source);
+
         final var templateFile = new TemplateFile(source);
         logger.log(Level.INFO, "acquired template file");
+
         final var contents = templateFile.getContents();
         final var pathName = "default.invoice";
+
         final var path = Path.of(pathName);
+        logger.log(Level.INFO, "writing template");
+
         Files.writeString(path, String.join("\n", contents));
-        logger.log(Level.INFO, "finished writing template");
+        logger.log(Level.INFO, "template has following holes:\n"
+                + String.join("\n", templateFile.getHoles()));
+
         return 0;
     }
 

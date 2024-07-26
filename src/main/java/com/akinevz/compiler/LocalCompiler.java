@@ -3,9 +3,8 @@ package com.akinevz.compiler;
 import java.nio.file.Path;
 
 import com.akinevz.compiler.CompilerFactory.InstanceType;
-import com.akinevz.template.TemplateFile;
 
-public class LocalCompiler implements ICompiler {
+public abstract class LocalCompiler implements ICompiler {
 
     private final String name;
     private final String command;
@@ -28,12 +27,6 @@ public class LocalCompiler implements ICompiler {
     @Override
     public String getCommand() {
         return command;
-    }
-
-    @Override
-    public void compile(final Path in, final TemplateFile tf, final Path out) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'compile'");
     }
 
 }

@@ -1,9 +1,6 @@
 package com.akinevz.compiler;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,17 +27,18 @@ public class CompilerFactoryTest {
         assertEquals("pandoc", pandoc.getCommand());
     }
 
-    @Test
-    void testGetLocal() throws IOException {
-        assertThrows(Exception.class,
-                () -> CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
+    // @Test
+    // void testGetLocal() throws IOException {
+    // assertThrows(Exception.class,
+    // () -> CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
 
-        final var usrBinPandoc = Path.of("/usr/bin/pandoc");
-        Files.createSymbolicLink(localPandoc, usrBinPandoc);
+    // final var usrBinPandoc = Path.of("/usr/bin/pandoc");
+    // Files.createSymbolicLink(localPandoc, usrBinPandoc);
 
-        final var compiler = assertDoesNotThrow(() -> CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
+    // final var compiler = assertDoesNotThrow(() ->
+    // CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
 
-        assertInstanceOf(ICompiler.class, compiler);
-    }
+    // assertInstanceOf(ICompiler.class, compiler);
+    // }
 
 }

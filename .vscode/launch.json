@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TemplateCommand",
+            "request": "launch",
+            "mainClass": "com.akinevz.TemplateCommand",
+            "projectName": "invoicegen"
+        },
+        {
+            "type": "java",
             "name": "InGen",
             "request": "launch",
             "mainClass": "com.akinevz.InGen",

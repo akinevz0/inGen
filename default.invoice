@@ -72,12 +72,4 @@ $if(payment.paypal)$
 }{paypal.me/$payment.paypal.username$}
 $endif$
 
-$if(payment.acco)$
-$payment.fullname$\\
-$payment.sort$\\
-$payment.acco$\\
-Bank transfer
-$endif$
-
 \end{document}
-
