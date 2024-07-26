@@ -20,7 +20,7 @@ public class TemplateCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         final var source = Paths.get(
                 this.getClass()
-                        .getResource("/invoice_template.tex")
+                        .getResource("/template.tex")
                         .getPath());
         logger.log(Level.INFO, "source path is " + source);
 

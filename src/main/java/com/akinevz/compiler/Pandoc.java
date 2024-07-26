@@ -28,6 +28,7 @@ public class Pandoc extends LocalCompiler {
     @Override
     public void compile(final Path in, final TemplateFile tf, final Path out) {
         final var holes = tf.getHoles();
+        // TODO: implement compilation
         for (final String string : holes) {
             logger.log(Level.INFO, string);
         }

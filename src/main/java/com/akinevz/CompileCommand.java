@@ -24,7 +24,7 @@ public class CompileCommand implements Callable<Integer> {
     @Parameters(index = "0", description = "Input file path")
     private Path inPath;
 
-    @Parameters(index = "1", description = "Output file or Template file path", defaultValue = "tex.invoice", arity = "0..1")
+    @Parameters(index = "1", description = "Output file or Template file path", defaultValue = "default.invoice", arity = "0..1")
     private Path tfPath;
 
     @Parameters(index = "2", description = "Output file path (see pandoc manual for supported formats)", arity = "0..1")

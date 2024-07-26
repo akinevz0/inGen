@@ -6,23 +6,16 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch with Arguments Prompt",
+            "request": "launch",
+            "mainClass": "",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        {
+            "type": "java",
             "name": "TemplateCommand",
             "request": "launch",
             "mainClass": "com.akinevz.TemplateCommand",
-            "projectName": "invoicegen"
-        },
-        {
-            "type": "java",
-            "name": "InGen",
-            "request": "launch",
-            "mainClass": "com.akinevz.InGen",
-            "projectName": "invoicegen"
-        },
-        {
-            "type": "java",
-            "name": "FixerCommand",
-            "request": "launch",
-            "mainClass": "com.akinevz.FixerCommand",
             "projectName": "invoicegen"
         },
         {
@@ -34,23 +27,9 @@
         },
         {
             "type": "java",
-            "name": "Launch with Arguments Prompt",
-            "request": "launch",
-            "mainClass": "",
-            "args": "${command:SpecifyProgramArgs}"
-        },
-        {
-            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
         },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "com.akinevz.Main",
-            "projectName": "invoicegen"
-        }
     ]
 }
