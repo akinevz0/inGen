@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "InGen",
+            "request": "launch",
+            "mainClass": "com.akinevz.InGen",
+            "projectName": "invoicegen"
+        },
+        {
+            "type": "java",
+            "name": "FixerCommand",
+            "request": "launch",
+            "mainClass": "com.akinevz.FixerCommand",
+            "projectName": "invoicegen"
+        },
+        {
+            "type": "java",
+            "name": "CompileCommand",
+            "request": "launch",
+            "mainClass": "com.akinevz.CompileCommand",
+            "projectName": "invoicegen"
+        },
+        {
+            "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "",

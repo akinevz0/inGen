@@ -18,7 +18,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "inGen", mixinStandardHelpOptions = true, version = "0.1", description = "Generates an invoice using default.invoice")
+@Command(name = "compile", mixinStandardHelpOptions = true, description = "generate an invoice using default.invoice")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());

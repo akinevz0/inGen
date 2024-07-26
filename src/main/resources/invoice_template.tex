@@ -8,13 +8,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[colorlinks]{hyperref}
 \usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry} % Document margins
+\usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{ragged2e}
 \usepackage{hhline}
 \usepackage{array}
-\usepackage[yyyymmdd]{datetime}
-
 
 \hypersetup{
     urlcolor=blue
@@ -23,59 +22,58 @@
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 \begin{document}
-
+	
 \thispagestyle{empty}
 
 % Header, for company, invoice info
 \begin{tabularx}{\textwidth}{l X l}
-    \hspace{-8pt} \multirow{5}{*} & \textbf{} & \hskip12pt\multirow{5}{*}{\begin{tabular}{r}\textbf{ $from.fullname$ } \\  $from.address$  \\ $from.contact$ \end{tabular}}\hspace{-6pt} \\
+   \hspace{-8pt} \multirow{5}{*} & \textbf{$contact.company$} & \hskip12pt\multirow{5}{*}{\begin{tabular}{r}\footnotesize\bf INVOICE \\[-0.8ex] \footnotesize $invoice.number$ \\[-0.4ex] \footnotesize\bf DATE \\[-0.8ex] \footnotesize \MakeUppercase{\today} \\[-0.4ex] \footnotesize\bf DUE \\[-0.8ex] \footnotesize UPON RECEIPT OF SERVICES \end{tabular}}\hspace{-6pt} \\
+   & $contact.name$ & \\
+   & $contact.site$ & \\
+   & $contact.phone$ & \\
+   & $contact.email$ & \\
+\end{tabularx} 
+
+\vspace{1 cm}
+
+BILL TO
+
+% Recipient name
+\Large\textbf{$customer.name$}\normalsize
+
+% Table of fees
+\begin{tabularx}{\linewidth}{c X X X c}
+    \hline
+    & & & &\\[0.25ex]
+    \centering{\bf{Service}} & \centering{\bf{Rate}} & \centering{\bf{Quantity}} & \centering{\bf{Discount}} & \bf Payment due\\[2.5ex]\hline
+    & & & &\\
+    $for(service)$
+    \centering $service.name$ (1 hr) & \centering\$ $service.rate$ & \centering $service.quantity$ & \centering $if(service.discount)$-\$$service.discount$$endif$ & \$$service.due$\\[2.5ex]\hline
+    & & & &\\
+    & & & \bf Total & \$15.00\\[2.5ex]\hhline{~~~--}
+    & & & & \\
+    & & & \bf Payment received & \$0.00\\[2.5ex]\hhline{~~~--}
+    & & & & \\
+    & & & \bf Balance due & \$15.00\\[2.5ex]\hhline{~~~==}
 \end{tabularx}
 
-\vspace{2 cm}
+\vspace{1 cm}
 
-\begin{center}
-    \Large\textbf{Invoice}\\
-$if(invoice.subheading)$
-    \normalsize\textbf{$invoice.subheading$}
+\Large\textbf{Payment instructions}\normalsize
+
+\vspace{0.1 cm}
+
+$if(payment.email)$
+\textbf{E-transfer}\\
+$payment.email$
 $endif$
-\end{center}
 
-\normalsize
-
-\begin{tabularx}{\textwidth}{X l}
-    \hspace*{\fill} \underline{INV\#}    & {{ invoice_id }}   \\
-    \hspace*{\fill} \underline{DATE: } & {{ invoice_date }} \\
-\end{tabularx}
-
-\vspace{-1 cm}
-
-\underline{Invoice To:}\\{{ INVOICE_TO.address }}\\Attention: {{ INVOICE_TO.fullname }}\\{{ INVOICE_TO.contact }}
-
-\vspace{2 cm}
-
-\begin{tabularx}{\linewidth}{c X {* optional ALL_ITEMS.hrs *}X {/* optional *}{* optional ALL_ITEMS.rate *}X {/* optional *}c}
-    \centering{\bf{ITEM}}                     & \centering{\bf{DESCRIPTION}}                                    {* optional ALL_ITEMS.hrs *} & \centering{\bf{HRS}}{/* optional *}      {* optional ALL_ITEMS.rate *}                              & \centering{\bf{RATE({{ PAYMENT.currency }}/HR)}}{/* optional *} & \bf SUB TOTAL({{ PAYMENT.currency }})                   \\[2.5ex]\hline
-                                              & {* optional ALL_ITEMS.hrs *}                                                                 & {/* optional *}                                                       {* optional ALL_ITEMS.rate *} & {/* optional *}                                                 & \\{* items *}
-    \centering {{ ITEM.id }}                  & \centering {{ ITEM.description }}                               {* optional ALL_ITEMS.hrs *} & \centering {{ ITEM.hrs }}{/* optional *}                              {* optional ALL_ITEMS.rate *} & {/* optional *} \centering {{ ITEM.rate }}                      & {{ ITEM.subtotal }}                                     \\[2.5ex]\hline
-                                              & {* optional ALL_ITEMS.hrs *}                                                                 & {/* optional *}                                                       {* optional ALL_ITEMS.rate *} & {/* optional *}                                                 & \\{/* items *}
-    {* optional_not ALL_EXPENSES.total_due *} & {* optional ALL_ITEMS.hrs *}                                                                 & {/* optional *}                                                       {* optional ALL_ITEMS.rate *} & {/* optional *} \bf \large{Total}                               & \large{{{ PAYMENT.currency }}{{ ALL_ITEMS.total_due }}} \\[2.5ex]\hhline{~~~--}{/* optional_not *}
-\end{tabularx}{* optional ALL_EXPENSES.total_due *}
-
-\vspace{0.5 cm}
-
-\begin{tabularx}{\linewidth}{c X {* optional ALL_EXPENSES.qty *}c {/* optional *}{* optional ALL_EXPENSES.rate *}c {/* optional *}c}
-    \centering{\bf{EXPENSE}}    & \centering{\bf{DESCRIPTION}}                                    {* optional ALL_EXPENSES.qty *} & \centering{\bf{QTY}}{/* optional *}      {* optional ALL_EXPENSES.rate *}                                 & \centering{\bf{RATE({{ PAYMENT.currency }})}}{/* optional *} & \bf SUB TOTAL({{ PAYMENT.currency }})         \\[2.5ex]\hline
-                                & {* optional ALL_EXPENSES.qty *}                                                                 & {/* optional *}                                                       {* optional ALL_EXPENSES.rate *}    & {/* optional *}                                              & \\{* expenses *}
-    \centering {{ EXPENSE.id }} & {{ EXPENSE.description }}                               {* optional ALL_EXPENSES.qty *}         & \centering {{ EXPENSE.qty }}{/* optional *}                              {* optional ALL_EXPENSES.rate *} & {/* optional *} \centering {{ EXPENSE.rate }}                & {{ EXPENSE.subtotal }}                        \\[2.5ex]\hline
-                                & {* optional ALL_EXPENSES.qty *}                                                                 & {/* optional *}                                                       {* optional ALL_EXPENSES.rate *}    & {/* optional *}                                              & \\{/* expenses *}
-                                & {* optional ALL_EXPENSES.qty *}                                                                 & {/* optional *}                                                       {* optional ALL_EXPENSES.rate *}    & {/* optional *} \bf \large{Total}                            & \large{{{ PAYMENT.currency }}{{ total_due }}} \\[2.5ex]\hhline{~~~--}
-\end{tabularx}{/* optional *}
-
-\vspace{3 cm}
-
-\begin{tabularx}{\linewidth}{X r}
-    \underline{Payment Instructions:} \hspace*{\fill} & \underline{Terms:} {{ invoice_terms }} \\
-    Account Name: {{ PAYMENT.account_name }}                                                   \\Account Address: {{ PAYMENT.account_address }} \\Account Number: {{ PAYMENT.account_number }} \\Bank Sort Code: {{ PAYMENT.bank_sort_code }} \\Bank: {{ PAYMENT.bank }}
-\end{tabularx}
+$if(payment.paypal$)
+\textbf{Paypal}\\
+\href{
+    $payment.paypal$
+}{paypal.me/$payment.paypal.username$}
+$endif$
 
 \end{document}
+

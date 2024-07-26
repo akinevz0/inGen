@@ -9,6 +9,7 @@ public class TemplateFile implements ITemplate {
 
     private final Path path;
     private final String file;
+    private final String[] lines;
 
     public TemplateFile(final Path path) throws IOException {
         this.path = path;
@@ -17,8 +18,14 @@ public class TemplateFile implements ITemplate {
         if (!Files.exists(getPath()))
             throw new FileNotFoundException(file);
 
-        final var lines = Files.lines(getPath()).toArray(String[]::new);
+        this.lines = Files.lines(getPath()).toArray(String[]::new);
         // do we want to pre-process the template?
+        // yes
+
+        // we load the lines, then preprocess the given template,
+        // and then we populate the markdown yaml block
+        // with the parameters we wish to insert.
+        // parameters are acquired through terminal prompt
     }
 
     @Override
@@ -29,5 +36,9 @@ public class TemplateFile implements ITemplate {
     @Override
     public String toString() {
         return "Template " + path;
+    }
+
+    public String[] getContents() {
+        return lines;
     }
 }
