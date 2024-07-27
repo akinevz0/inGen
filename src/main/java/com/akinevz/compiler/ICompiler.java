@@ -13,6 +13,7 @@ public interface ICompiler {
 
     String getCommand();
 
-    void compile(InputFile in, TemplateFile tf, Path out) throws IOException, InterruptedException, ExecutionException;
+    int compile(final InputFile in, final TemplateFile tf, final Path out)
+            throws IOException, InterruptedException, ExecutionException;
 
 }

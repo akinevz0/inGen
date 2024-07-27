@@ -3,7 +3,6 @@ package com.akinevz;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,14 +58,6 @@ public class CompileCommand implements Callable<Integer> {
         for (final Path inPath : inPaths) {
             final var in = new InputFile(inPath);
             logger.log(Level.INFO, "{0} loaded", in);
-
-            final Map<String, Object> objects = in.getObjects();
-            for (final String objectKey : objects.keySet()) {
-                final var value = objects.get(objectKey);
-                if (!(value instanceof Map) && !(value instanceof List) && !tf.contains(objectKey)) {
-                    logger.log(Level.WARNING, "input file contains " + objectKey + ", not used in template");
-                }
-            }
 
             final var out = outToFolder(inPath, outPath, ".pdf");
             logger.log(Level.INFO, "outputting to {0}", out);

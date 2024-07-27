@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
@@ -23,7 +24,11 @@ public class InputFile {
 
         final var yaml = new Yaml();
         final var fis = Files.newInputStream(path);
-        this.objects = yaml.load(fis);
+        final var loaded = yaml.<Map<String, Object>>load(fis);
+        if (loaded == null)
+            this.objects = new HashMap<>();
+        else
+            this.objects = loaded;
     }
 
     private Path getPath() {

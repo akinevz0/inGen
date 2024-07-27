@@ -2,6 +2,9 @@ package com.akinevz.compiler;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -34,14 +37,35 @@ public class Pandoc extends LocalCompiler implements AutoCloseable {
     }
 
     @Override
-    public void compile(final InputFile in, final TemplateFile tf, final Path out)
+    public int compile(final InputFile in, final TemplateFile tf, final Path out)
             throws IOException, InterruptedException, ExecutionException {
+        final var objects = in.getObjects();
+        final var extrakeys = new HashSet<String>();
+        final var missingkeys = new HashSet<String>();
+        for (final String objectKey : objects.keySet()) {
+            final var value = objects.get(objectKey);
+            if (!(value instanceof Map) && !(value instanceof List) && !tf.contains(objectKey))
+                extrakeys.add(objectKey);
+        }
+        if (!extrakeys.isEmpty())
+            logger.log(Level.WARNING, "input file contains " + extrakeys.size() + " keys not used in template:\n{0}",
+                    extrakeys);
+        final var holes = tf.getHoles();
+        for (final String hole : holes) {
+            if (!objects.containsKey(hole))
+                missingkeys.add(hole);
+        }
+        if (!missingkeys.isEmpty()) {
+            logger.log(Level.WARNING, "input value for {0} missing", missingkeys);
+            return -1;
+        }
         final var command = new Command(es, getCommand(), "-i", in.toString(), "--template", tf.toString(), "-o",
                 out.toString());
         if (command.getExitCode() != 0) {
             logger.log(Level.SEVERE, "Error:\n{0}", String.join("\n", command.getError()));
         }
         logger.log(Level.INFO, "Complete.\n{0}", String.join("\n", command.getOutput()));
+        return 0;
     }
 
     @Override
