@@ -3,6 +3,7 @@ package com.akinevz;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-@Parameters(commandNames = { "compile", "-c" }, commandDescription = "compile an invoice with a template")
+@Parameters(commandNames = { "compile" }, commandDescription = "compile an invoice with a template")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
@@ -36,13 +37,14 @@ public class CompileCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        // package management
         if (help) {
             final var jcommander = new JCommander(this);
             jcommander.setProgramName("ingen compile");
             jcommander.usage();
             return -1;
         }
+
+        // package management
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
         try (final var dr = new DependencyResolver()) {
             if (!dr.ensureHas(packageNames)) {
@@ -69,8 +71,10 @@ public class CompileCommand implements Callable<Integer> {
             final var in = new InputFile(inPath);
             logger.log(Level.INFO, "{0} loaded", in);
 
-            for (final String objectKey : in.getObjects().keySet()) {
-                if (!tf.contains(objectKey)) {
+            final Map<String, Object> objects = in.getObjects();
+            for (final String objectKey : objects.keySet()) {
+                final var value = objects.get(objectKey);
+                if (!(value instanceof Map) && !(value instanceof List) && !tf.contains(objectKey)) {
                     logger.log(Level.WARNING, "input file contains " + objectKey + ", not used in template");
                 }
             }
