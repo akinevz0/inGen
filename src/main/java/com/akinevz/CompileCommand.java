@@ -18,7 +18,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-@Parameters(commandNames = { "compile" }, commandDescription = "compile an invoice with a template")
+@Parameters(commandNames = { "compile" }, commandDescription = "Compile an invoice with a template")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
