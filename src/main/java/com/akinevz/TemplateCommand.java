@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import com.akinevz.template.TemplateFile;
 import com.beust.jcommander.Parameters;
 
-@Parameters(commandNames = { "template" }, commandDescription = "generate template in working directory")
+@Parameters(commandNames = { "template", "-t" }, commandDescription = "generate template in working directory")
 public class TemplateCommand implements Callable<Integer> {
     static final Logger logger = Logger.getLogger(TemplateCommand.class.getName());
 

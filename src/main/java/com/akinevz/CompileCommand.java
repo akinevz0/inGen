@@ -15,7 +15,7 @@ import com.akinevz.template.TemplateFile;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-@Parameters(commandNames = { "compile" }, commandDescription = "compile an invoice with a template")
+@Parameters(commandNames = { "compile", "-c" }, commandDescription = "compile an invoice with a template")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
@@ -33,8 +33,7 @@ public class CompileCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         // package management
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
-        try {
-            final var dr = new DependencyResolver();
+        try (final var dr = new DependencyResolver()) {
             if (!dr.ensureHas(packageNames)) {
                 throw new DependenciesUnsatisfiedException(packageNames);
             }
