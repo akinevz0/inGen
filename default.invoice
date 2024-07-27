@@ -45,10 +45,10 @@ BILL TO
 \begin{tabularx}{\linewidth}{c X X X c}
     \hline
     & & & &\\[0.25ex]
-    \centering{\bf{Service}} & \centering{\bf{Rate}} & \centering{\bf{Quantity}} & \centering{\bf{Discount}} & \bf Payment due\\[2.5ex]\hline
+    \centering{\bf{Service}} & \centering{\bf{Rate}} & \centering{\bf{Hours}} & \centering{\bf{Discount}} & \bf Payment due\\[2.5ex]\hline
     & & & &\\
     $for(service)$
-    \centering $service.name$ (1 hr) & \centering $service.rate$ & \centering $service.quantity$ & \centering $if(service.discount)$-$service.discount$$endif$ & $service.due$\\[2.5ex]\hline
+    \centering $service.name$ & \centering $service.rate$ & \centering $service.hours$ & \centering $if(service.discount)$-$service.discount$$endif$ & $service.due$\\[2.5ex]\hline
     $endfor$
     & & & &\\
     & & & \bf Total due & $invoice.total$\\
