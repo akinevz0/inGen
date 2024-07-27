@@ -14,7 +14,6 @@ import com.akinevz.install.DependenciesUnsatisfiedException;
 import com.akinevz.install.DependencyResolver;
 import com.akinevz.install.PlatformUnupportedException;
 import com.akinevz.template.TemplateFile;
-import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
@@ -32,18 +31,8 @@ public class CompileCommand implements Callable<Integer> {
     @Parameter(names = { "-o", "--out" }, description = "output folder", arity = 1, required = false)
     volatile private Path outPath = Path.of("./");
 
-    @Parameter(names = { "-h", "--help" }, help = true)
-    volatile private boolean help = false;
-
     @Override
     public Integer call() throws Exception {
-        if (help) {
-            final var jcommander = new JCommander(this);
-            jcommander.setProgramName("ingen compile");
-            jcommander.usage();
-            return -1;
-        }
-
         // package management
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
         try (final var dr = new DependencyResolver()) {
