@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "InGen",
+            "request": "launch",
+            "mainClass": "com.akinevz.InGen",
+            "projectName": "ingen"
+        },
+        {
+            "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "",
@@ -16,20 +23,20 @@
             "name": "TemplateCommand",
             "request": "launch",
             "mainClass": "com.akinevz.TemplateCommand",
-            "projectName": "invoicegen"
+            "projectName": "ingen"
         },
         {
             "type": "java",
             "name": "CompileCommand",
             "request": "launch",
             "mainClass": "com.akinevz.CompileCommand",
-            "projectName": "invoicegen"
+            "projectName": "ingen"
         },
         {
             "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
+        }
     ]
 }
