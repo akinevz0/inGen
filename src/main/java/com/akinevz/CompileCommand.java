@@ -1,6 +1,7 @@
 package com.akinevz;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,24 +12,22 @@ import com.akinevz.install.DependenciesUnsatisfiedException;
 import com.akinevz.install.DependencyResolver;
 import com.akinevz.install.PlatformUnupportedException;
 import com.akinevz.template.TemplateFile;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
-
-@Command(name = "compile", mixinStandardHelpOptions = true, description = "generate an invoice using default.invoice")
+@Parameters(commandNames = { "compile" }, commandDescription = "compile an invoice with a template")
 public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
 
-    @Parameters(index = "0", description = "Input file path")
-    private Path inPath;
+    @Parameter(description = "input file(s)")
+    private List<Path> inPaths;
 
-    @Parameters(index = "1", description = "Output file or Template file path", defaultValue = "default.invoice", arity = "0..1")
-    private Path tfPath;
+    @Parameter(names = { "-t", "--template" }, description = "pandoc-style template", arity = 1, required = false)
+    volatile private Path tfPath = Path.of("default.invoice");
 
-    @Parameters(index = "2", description = "Output file path (see pandoc manual for supported formats)", arity = "0..1")
-    private Path outPath;
+    @Parameter(names = { "-o", "--out" }, description = "output folder", arity = 1, required = false)
+    volatile private Path outPath = Path.of(".");
 
     @Override
     public Integer call() throws Exception {
@@ -45,10 +44,6 @@ public class CompileCommand implements Callable<Integer> {
             return -1;
         }
 
-        // check if infile exists which should be a YAML
-        // TODO: parse yaml
-        final var in = new InputFile(inPath);
-        logger.log(Level.INFO, in + " loaded");
         // load template
         final var tf = new TemplateFile(tfPath);
         logger.log(Level.INFO, tf + " loaded");
@@ -57,24 +52,26 @@ public class CompileCommand implements Callable<Integer> {
         final var c = CompilerFactory.getCompiler(InstanceType.Pandoc);
         logger.log(Level.INFO, "Pandoc loaded");
 
-        // get output path
-        final var out = (outPath == null) ? makeOutput() : outPath;
-        logger.log(Level.INFO, "Writing to " + out.toString());
+        // check if infile exists which should be a YAML
+        // TODO: parse yaml
+        for (final Path inPath : inPaths) {
+            final var in = new InputFile(inPath);
+            logger.log(Level.INFO, in + " loaded");
 
-        // compile template
-        c.compile(inPath, tf, out);
+            final var out = outToFolder(inPath, outPath, ".pdf");
+
+            // compile template
+            c.compile(in, tf, out);
+        }
         return 0;
     }
 
-    private Path makeOutput() {
-        final var filename = inPath.getFileName().toString();
-        final var output = inPath.resolveSibling(filename + ".pdf");
+    Path outToFolder(final Path inPath, final Path outPath, final String ext) {
+        final var filename = inPath.getFileName().getFileName().toString();
+        final var extPos = filename.lastIndexOf(".");
+        final var extRemoved = filename.substring(0, extPos < 0 ? filename.length() : extPos);
+        final var output = outPath.resolve(extRemoved + ext);
         return output;
-    }
-
-    public static void main(final String[] args) {
-        final int exit = new CommandLine(new CompileCommand()).execute(args);
-        System.exit(exit);
     }
 
 }

@@ -2,9 +2,9 @@ package com.akinevz.compiler;
 
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.akinevz.InputFile;
 import com.akinevz.compiler.CompilerFactory.InstanceType;
 import com.akinevz.template.TemplateFile;
 
@@ -26,12 +26,10 @@ public class Pandoc extends LocalCompiler {
     }
 
     @Override
-    public void compile(final Path in, final TemplateFile tf, final Path out) {
-        final var holes = tf.getHoles();
-        // TODO: implement compilation
-        for (final String string : holes) {
-            logger.log(Level.INFO, string);
-        }
+    public void compile(final InputFile in, final TemplateFile tf, final Path out) {
+        // determine that schema is complete
+        // run the pandoc command
+
     }
 
 }

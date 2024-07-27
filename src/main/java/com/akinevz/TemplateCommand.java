@@ -8,11 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.akinevz.template.TemplateFile;
+import com.beust.jcommander.Parameters;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-
-@Command(name = "template", mixinStandardHelpOptions = true, description = "generate a template in current working directory")
+@Parameters(commandNames = { "template" }, commandDescription = "generate template in working directory")
 public class TemplateCommand implements Callable<Integer> {
     static final Logger logger = Logger.getLogger(TemplateCommand.class.getName());
 
@@ -40,8 +38,4 @@ public class TemplateCommand implements Callable<Integer> {
         return 0;
     }
 
-    public static void main(final String[] args) {
-        final int exit = new CommandLine(new TemplateCommand()).execute(args);
-        System.exit(exit);
-    }
 }
