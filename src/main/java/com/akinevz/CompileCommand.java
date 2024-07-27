@@ -55,6 +55,7 @@ public class CompileCommand implements Callable<Integer> {
         if (inPaths.isEmpty())
             logger.log(Level.INFO, "no input files specified");
 
+        var returnCode = 0;
         for (final Path inPath : inPaths) {
             final var in = new InputFile(inPath);
             logger.log(Level.INFO, "{0} loaded", in);
@@ -63,9 +64,9 @@ public class CompileCommand implements Callable<Integer> {
             logger.log(Level.INFO, "outputting to {0}", out);
 
             // compile template
-            c.compile(in, tf, out);
+            returnCode += c.compile(in, tf, out);
         }
-        return 0;
+        return returnCode;
     }
 
     Path outToFolder(final Path inPath, final Path outPath, final String ext) {

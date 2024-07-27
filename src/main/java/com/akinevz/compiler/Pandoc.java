@@ -50,21 +50,22 @@ public class Pandoc extends LocalCompiler implements AutoCloseable {
         if (!extrakeys.isEmpty())
             logger.log(Level.WARNING, "input file contains " + extrakeys.size() + " keys not used in template:\n{0}",
                     extrakeys);
-        final var holes = tf.getHoles();
-        for (final String hole : holes) {
-            if (!objects.containsKey(hole))
-                missingkeys.add(hole);
-        }
-        if (!missingkeys.isEmpty()) {
-            logger.log(Level.WARNING, "input value for {0} missing", missingkeys);
-            return -1;
-        }
+        // TODO: create datastructure for dotted access of keys
+        // final var holes = tf.getHoles();
+        // for (final String hole : holes) {
+        // if (!objects.containsKey(hole))
+        // missingkeys.add(hole);
+        // }
+        // if (!missingkeys.isEmpty()) {
+        // logger.log(Level.WARNING, "input value for {0} missing", missingkeys);
+        // return -1;
+        // }
         final var command = new Command(es, getCommand(), "-i", in.toString(), "--template", tf.toString(), "-o",
                 out.toString());
         if (command.getExitCode() != 0) {
-            logger.log(Level.SEVERE, "Error:\n{0}", String.join("\n", command.getError()));
+            logger.log(Level.SEVERE, "error:\n{0}", String.join("\n", command.getError()));
         }
-        logger.log(Level.INFO, "Complete.\n{0}", String.join("\n", command.getOutput()));
+        logger.log(Level.INFO, "complete.\n{0}", String.join("\n", command.getOutput()));
         return 0;
     }
 
