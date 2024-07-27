@@ -22,14 +22,14 @@ public class CompileCommand implements Callable<Integer> {
 
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
 
-    @Parameter(description = "input file(s)")
+    @Parameter(description = "Input file(s)")
     volatile private List<Path> inPaths = new ArrayList<>();
 
-    @Parameter(names = { "-t", "--template" }, description = "pandoc-style template", arity = 1, required = false)
+    @Parameter(names = { "-t", "--template" }, description = "Template (pandoc style)", arity = 1, required = false)
     volatile private Path tfPath = Path.of("default.invoice");
 
-    @Parameter(names = { "-o", "--out" }, description = "output folder", arity = 1, required = false)
-    volatile private Path outPath = Path.of("./");
+    @Parameter(names = { "-o", "--out" }, description = "Output folder", arity = 1, required = false)
+    volatile private Path outPath = Path.of(".");
 
     @Override
     public Integer call() throws Exception {
