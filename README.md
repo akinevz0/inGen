@@ -22,8 +22,6 @@ Program offers two commands `./ingen template` and `./ingen compile`.
 
 Additional help can be provided such as `./ingen compile --help`.
 
-### ingen template
-
 ```
 Usage: ingen [options] [command] [command options]
   Options:
