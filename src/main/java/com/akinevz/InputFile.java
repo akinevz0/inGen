@@ -34,4 +34,9 @@ public class InputFile {
         return objects;
     }
 
+    @Override
+    public String toString() {
+        return file;
+    }
+
 }

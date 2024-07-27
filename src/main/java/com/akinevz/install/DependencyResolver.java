@@ -43,7 +43,7 @@ public class DependencyResolver implements AutoCloseable {
 
     Optional<IPlatform> getLinux()
             throws IOException, InterruptedException, ExecutionException {
-        final var getOsRelease = new Command(es, "cat /etc/os-release");
+        final var getOsRelease = new Command(es, "cat", "/etc/os-release");
         final var lines = getOsRelease.getOutput();
         final var name = Stream.of(lines).filter(line -> line.startsWith("NAME")).findFirst();
         return name.map(this::getLinuxPlatformName).flatMap(IPlatform::getPlatform);

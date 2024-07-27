@@ -1,6 +1,7 @@
 package com.akinevz;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import com.akinevz.install.DependenciesUnsatisfiedException;
 import com.akinevz.install.DependencyResolver;
 import com.akinevz.install.PlatformUnupportedException;
 import com.akinevz.template.TemplateFile;
+import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
@@ -21,23 +23,32 @@ public class CompileCommand implements Callable<Integer> {
     static final Logger logger = Logger.getLogger(CompileCommand.class.getName());
 
     @Parameter(description = "input file(s)")
-    private List<Path> inPaths;
+    volatile private List<Path> inPaths = new ArrayList<>();
 
     @Parameter(names = { "-t", "--template" }, description = "pandoc-style template", arity = 1, required = false)
     volatile private Path tfPath = Path.of("default.invoice");
 
     @Parameter(names = { "-o", "--out" }, description = "output folder", arity = 1, required = false)
-    volatile private Path outPath = Path.of(".");
+    volatile private Path outPath = Path.of("./");
+
+    @Parameter(names = { "-h", "--help" }, help = true)
+    volatile private boolean help = false;
 
     @Override
     public Integer call() throws Exception {
         // package management
+        if (help) {
+            final var jcommander = new JCommander(this);
+            jcommander.setProgramName("ingen compile");
+            jcommander.usage();
+            return -1;
+        }
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
         try (final var dr = new DependencyResolver()) {
             if (!dr.ensureHas(packageNames)) {
                 throw new DependenciesUnsatisfiedException(packageNames);
             }
-            logger.log(Level.INFO, "All packages installed");
+            logger.log(Level.INFO, "all packages installed");
         } catch (DependenciesUnsatisfiedException | PlatformUnupportedException ex) {
             logger.log(Level.WARNING, "Missing system packages: ", ex);
             return -1;
@@ -45,19 +56,27 @@ public class CompileCommand implements Callable<Integer> {
 
         // load template
         final var tf = new TemplateFile(tfPath);
-        logger.log(Level.INFO, tf + " loaded");
+        logger.log(Level.INFO, "{0} loaded", tf);
 
         // acquire handle to pandoc
         final var c = CompilerFactory.getCompiler(InstanceType.Pandoc);
-        logger.log(Level.INFO, "Pandoc loaded");
+        logger.log(Level.INFO, "pandoc loaded");
 
-        // check if infile exists which should be a YAML
-        // TODO: parse yaml
+        if (inPaths.isEmpty())
+            logger.log(Level.INFO, "no input files specified");
+
         for (final Path inPath : inPaths) {
             final var in = new InputFile(inPath);
-            logger.log(Level.INFO, in + " loaded");
+            logger.log(Level.INFO, "{0} loaded", in);
+
+            for (final String objectKey : in.getObjects().keySet()) {
+                if (!tf.contains(objectKey)) {
+                    logger.log(Level.WARNING, "input file contains " + objectKey + ", not used in template");
+                }
+            }
 
             final var out = outToFolder(inPath, outPath, ".pdf");
+            logger.log(Level.INFO, "outputting to {0}", out);
 
             // compile template
             c.compile(in, tf, out);

@@ -1,6 +1,5 @@
 package com.akinevz;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
@@ -22,19 +21,13 @@ public class TemplateCommand implements Callable<Integer> {
                         .getPath());
         logger.log(Level.INFO, "source path is " + source);
 
-        final var templateFile = new TemplateFile(source);
+        final var templateFile = TemplateFile.fromResource(source);
         logger.log(Level.INFO, "acquired template file");
 
-        final var contents = templateFile.getContents();
-        final var pathName = "default.invoice";
+        final var path = Path.of("default.invoice");
+        logger.log(Level.INFO, "writing template to {0}", path);
 
-        final var path = Path.of(pathName);
-        logger.log(Level.INFO, "writing template");
-
-        Files.writeString(path, String.join("\n", contents));
-        logger.log(Level.INFO, "template has following holes:\n"
-                + String.join("\n", templateFile.getHoles()));
-
+        templateFile.save(path);
         return 0;
     }
 

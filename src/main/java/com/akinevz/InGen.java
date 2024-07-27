@@ -41,23 +41,18 @@ public class InGen implements Callable<Integer> {
         try {
             jcommander.setProgramName("ingen");
             jcommander.parse(args);
-            final var retval = switch (jcommander.getParsedCommand()) {
-                case "compile", "-c" -> compile.call();
+            final var command = jcommander.getParsedCommand();
+            return switch (command == null ? "" : command) {
                 case "template", "-t" -> template.call();
-
-                default -> -1;
+                case "compile", "-c" -> compile.call();
+                default -> {
+                    jcommander.usage();
+                    yield -1;
+                }
             };
-
-            if (retval != 0) {
-                jcommander.usage();
-            }
-            return retval;
-
         } catch (final ParameterException e) {
             System.err.println(e.getLocalizedMessage());
-        } catch (final Exception e) {
         }
-        jcommander.usage();
-        return -1;
+        return Integer.MIN_VALUE;
     }
 }
