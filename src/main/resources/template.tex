@@ -28,7 +28,7 @@
 
 % Header, for company, invoice info
 \begin{tabularx}{\textwidth}{l X l}
-   \hspace{-8pt} \multirow{5}{*} & \textbf{$contact.company$} & \hskip12pt\multirow{5}{*}{\begin{tabular}{r}\footnotesize\bf INVOICE \\[-0.8ex] \footnotesize $invoice.number$ \\[-0.4ex] \footnotesize\bf DATE \\[-0.8ex] \footnotesize \MakeUppercase{\today} \\[-0.4ex] \footnotesize\bf DUE \\[-0.8ex] \footnotesize UPON RECEIPT OF SERVICES \end{tabular}}\hspace{-6pt} \\
+   \hspace{-8pt} \multirow{5}{*} & \textbf{$invoice.customer$} & \hskip12pt\multirow{5}{*}{\begin{tabular}{r}\footnotesize\bf INVOICE \\[-0.8ex] \footnotesize $invoice.number$ \\[-0.4ex] \footnotesize\bf DATE \\[-0.8ex] \footnotesize \MakeUppercase{\today} \\[-0.4ex] \footnotesize\bf DUE \\[-0.8ex] \footnotesize UPON RECEIPT OF SERVICES \end{tabular}}\hspace{-6pt} \\
    & $contact.name$ & \\
    & $contact.site$ & \\
    & $contact.phone$ & \\
@@ -63,22 +63,22 @@ BILL TO
 \vspace{0.1 cm}
 
 $if(payment.email)$
-\textbf{E-transfer}\\
+\textbf{E-transfer}: $payment.fullname$\\
 $payment.email$
 $endif$
 
 $if(payment.paypal)$
-\textbf{Paypal}\\
+\textbf{Paypal}: $payment.fullname$\\
 \href{
-    $payment.paypal$
+    paypal.me/$payment.paypal.username$
 }{paypal.me/$payment.paypal.username$}
 $endif$
 
-$if(payment.acco)$
-\textbf{Bank transfer}\\
+$if(payment.bank)$
+\textbf{Bank transfer}:\\
 $payment.fullname$\\
-$payment.sort$\\
-$payment.acco$
+$payment.bank.sort$\\
+$payment.bank.account$
 $endif$
 
 \end{document}
