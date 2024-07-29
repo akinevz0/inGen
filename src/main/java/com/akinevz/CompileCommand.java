@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.akinevz.compiler.CompilerFactory;
 import com.akinevz.compiler.CompilerFactory.InstanceType;
+import com.akinevz.input.InputFile;
 import com.akinevz.install.DependenciesUnsatisfiedException;
 import com.akinevz.install.DependencyResolver;
 import com.akinevz.install.PlatformUnupportedException;
@@ -57,7 +58,7 @@ public class CompileCommand implements Callable<Integer> {
 
         var returnCode = 0;
         for (final Path inPath : inPaths) {
-            final var in = new InputFile(inPath);
+            final var in = new InputFile(inPath, tf);
             logger.log(Level.INFO, "{0} loaded", in);
 
             final var out = outToFolder(inPath, outPath, ".pdf");

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 
-import com.akinevz.InputFile;
+import com.akinevz.input.InputFile;
 import com.akinevz.template.TemplateFile;
 
 public interface ICompiler {

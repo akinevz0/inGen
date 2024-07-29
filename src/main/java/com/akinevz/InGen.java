@@ -1,6 +1,8 @@
 package com.akinevz;
 
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -9,6 +11,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandNames = "ingen", commandDescription = "generates invoices")
 public class InGen implements Callable<Integer> {
+
+    private final static Logger logger = Logger.getLogger(InGen.class.getName());
 
     @Parameter(names = { "-h", "--help" }, help = true)
     private boolean help;
@@ -26,8 +30,16 @@ public class InGen implements Callable<Integer> {
     }
 
     public static void main(final String[] args) throws Exception {
+
         final var ingen = new InGen(args);
-        System.exit(ingen.call());
+        Integer exitCode = 0;
+        try {
+            exitCode = ingen.call();
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, "unhandled exception", e);
+        } finally {
+            System.exit(exitCode);
+        }
     }
 
     @Override
