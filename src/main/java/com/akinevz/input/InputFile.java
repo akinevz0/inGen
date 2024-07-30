@@ -6,9 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.akinevz.template.TemplateFile;
 
@@ -26,20 +24,9 @@ public class InputFile {
         if (!Files.exists(getPath()))
             throw new FileNotFoundException("input file " + file);
 
-        final var yaml = new Yaml(new Constructor(InputYaml.class, new LoaderOptions()));
+        final var yaml = new Yaml();
         final var fis = Files.newInputStream(path);
-        final var loaded = yaml.<InputYaml>load(fis);
-        // try {
-        // for (final String holeString : tf.getHoles()) {
-        // if (!loaded.has(holeString))
-        // throw new TemplatingException(holeString);
-        // }
-        // } catch (final TemplatingException ex) {
-        // throw ex;
-        // } catch (final Exception ex) {
-        // throw new TemplatingException(ex);
-        // }
-        objects = loaded;
+        objects = yaml.load(fis);
     }
 
     private Path getPath() {
