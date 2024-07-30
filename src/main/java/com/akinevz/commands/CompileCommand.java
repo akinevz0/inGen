@@ -1,4 +1,4 @@
-package com.akinevz;
+package com.akinevz.commands;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

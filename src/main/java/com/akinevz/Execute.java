@@ -7,13 +7,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class Command {
+public class Execute {
 
     private final Future<String[]> output;
     private final Future<String[]> errors;
     private final Process process;
 
-    public Command(final ExecutorService es, final String... args) throws IOException {
+    public Execute(final ExecutorService es, final String... args) throws IOException {
         final var builder = new ProcessBuilder(args);
         this.process = builder.start();
         final var outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

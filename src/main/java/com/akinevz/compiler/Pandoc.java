@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.akinevz.Command;
+import com.akinevz.Execute;
 import com.akinevz.compiler.CompilerFactory.InstanceType;
 import com.akinevz.input.InputFile;
 import com.akinevz.template.TemplateFile;
@@ -37,7 +37,7 @@ public class Pandoc extends LocalCompiler implements AutoCloseable {
     public int compile(final InputFile in, final TemplateFile tf, final Path out)
             throws IOException, InterruptedException, ExecutionException {
 
-        final var command = new Command(es, getCommand(), "-i", in.toString(), "--template", tf.toString(), "-o",
+        final var command = new Execute(es, getCommand(), "-i", in.toString(), "--template", tf.toString(), "-o",
                 out.toString());
         if (command.getExitCode() != 0) {
             logger.log(Level.SEVERE, "error:\n{0}", String.join("\n", command.getError()));

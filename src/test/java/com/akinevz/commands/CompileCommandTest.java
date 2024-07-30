@@ -1,4 +1,4 @@
-package com.akinevz;
+package com.akinevz.commands;
 
 import static org.junit.Assert.assertEquals;
 

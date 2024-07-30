@@ -26,19 +26,19 @@ public class CommandTest {
 
     @Test
     void testGetError() throws IOException, InterruptedException, ExecutionException {
-        final var command = new Command(es, "cat", "nosuchfile");
+        final var command = new Execute(es, "cat", "nosuchfile");
         assertEquals("cat: nosuchfile: No such file or directory", command.getError()[0]);
     }
 
     @Test
     void testGetExitCode() throws InterruptedException, IOException {
-        final var command = new Command(es, "echo");
+        final var command = new Execute(es, "echo");
         assertEquals(0, command.getExitCode());
     }
 
     @Test
     void testGetOutput() throws InterruptedException, ExecutionException, IOException {
-        final var command = new Command(es, "echo", "test");
+        final var command = new Execute(es, "echo", "test");
         assertEquals("test", command.getOutput()[0]);
     }
 }
