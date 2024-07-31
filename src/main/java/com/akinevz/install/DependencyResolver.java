@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SystemUtils;
 
-import com.akinevz.Execute;
+import com.akinevz.Process;
 import com.akinevz.install.package_manager.IPackageManager;
 import com.akinevz.install.package_manager.PackageInstallException;
 import com.akinevz.install.platform.IPlatform;
@@ -43,7 +43,7 @@ public class DependencyResolver implements AutoCloseable {
 
     Optional<IPlatform> getLinux()
             throws IOException, InterruptedException, ExecutionException {
-        final var getOsRelease = new Execute(es, "cat", "/etc/os-release");
+        final var getOsRelease = new Process(es, "cat", "/etc/os-release");
         final var lines = getOsRelease.getOutput();
         final var name = Stream.of(lines).filter(line -> line.startsWith("NAME")).findFirst();
         return name.map(this::getLinuxPlatformName).flatMap(IPlatform::getPlatform);

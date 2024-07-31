@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.akinevz.Execute;
+import com.akinevz.Process;
 
 public class Apt implements IPackageManager, AutoCloseable {
 
@@ -19,7 +19,7 @@ public class Apt implements IPackageManager, AutoCloseable {
     @Override
     public boolean hasInstalled(final String packageName) throws IOException, InterruptedException {
         // TODO: check which dpkg command gets the installed package information
-        final var command = new Execute(es, DPKG, "-s", packageName);
+        final var command = new Process(es, DPKG, "-s", packageName);
         return command.getExitCode() == 0;
     }
 
@@ -30,9 +30,9 @@ public class Apt implements IPackageManager, AutoCloseable {
 
     @Override
     public void install(final String packageName) throws PackageInstallException {
-        Execute command;
+        Process command;
         try {
-            command = new Execute(es, getName(), "install", packageName);
+            command = new Process(es, getName(), "install", packageName);
             if (!(command.getExitCode() == 0))
                 throw new PackageInstallException(packageName, command.getError());
         } catch (IOException | InterruptedException | ExecutionException e) {

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CommandTest {
+public class ProcessTest {
     private static ExecutorService es;
 
     @BeforeAll
@@ -26,19 +26,19 @@ public class CommandTest {
 
     @Test
     void testGetError() throws IOException, InterruptedException, ExecutionException {
-        final var command = new Execute(es, "cat", "nosuchfile");
-        assertEquals("cat: nosuchfile: No such file or directory", command.getError()[0]);
+        final var process = new Process(es, "cat", "nosuchfile");
+        assertEquals("cat: nosuchfile: No such file or directory", process.getError()[0]);
     }
 
     @Test
     void testGetExitCode() throws InterruptedException, IOException {
-        final var command = new Execute(es, "echo");
-        assertEquals(0, command.getExitCode());
+        final var process = new Process(es, "echo");
+        assertEquals(0, process.getExitCode());
     }
 
     @Test
     void testGetOutput() throws InterruptedException, ExecutionException, IOException {
-        final var command = new Execute(es, "echo", "test");
-        assertEquals("test", command.getOutput()[0]);
+        final var process = new Process(es, "echo", "test");
+        assertEquals("test", process.getOutput()[0]);
     }
 }

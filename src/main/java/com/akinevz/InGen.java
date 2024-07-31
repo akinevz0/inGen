@@ -37,7 +37,7 @@ public class InGen implements Callable<Integer> {
         try {
             exitCode = ingen.call();
         } catch (final Exception e) {
-            logger.log(Level.SEVERE, "unhandled exception", e);
+            logger.log(Level.SEVERE, "terminal exception", e);
         } finally {
             System.exit(exitCode);
         }

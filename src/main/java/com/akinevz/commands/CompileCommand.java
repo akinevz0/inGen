@@ -31,12 +31,15 @@ public class CompileCommand implements Callable<Integer> {
     @Parameter(names = { "-o", "--out" }, description = "Output folder", arity = 1, required = false)
     volatile private Path outPath = Path.of(".");
 
+    @Parameter(names = { "-n", "--nodepcheck" }, description = "Skip dependency check")
+    volatile private boolean skipDepCheck = false;
+
     @Override
     public Integer call() throws Exception {
         // package management
         final var packageNames = new String[] { "texlive-latex-extra", "pandoc" };
         try (final var dr = new DependencyResolver()) {
-            if (!dr.ensureHas(packageNames)) {
+            if (!skipDepCheck && !dr.ensureHas(packageNames)) {
                 throw new DependenciesUnsatisfiedException(packageNames);
             }
             logger.log(Level.INFO, "all packages installed");
