@@ -8,7 +8,6 @@ import com.akinevz.commands.CompileCommand;
 import com.akinevz.commands.TemplateCommand;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 
 @Parameters(commandNames = "ingen", commandDescription = "generates invoices")
@@ -52,34 +51,25 @@ public class InGen implements Callable<Integer> {
                 .addCommand(compile)
                 .build();
 
-        try {
-            jcommander.setProgramName("ingen");
-            jcommander.parse(args);
-            final var command = jcommander.getParsedCommand();
-            return switch (command == null ? "" : command) {
-                case "template" -> {
-                    if (help) {
-                        jcommander.usage("template");
-                        yield -1;
-                    }
-                    yield template.call();
-                }
-                case "compile" -> {
-                    if (help) {
-                        jcommander.usage("compile");
-                        yield -1;
-                    }
-                    yield compile.call();
-                }
-                default -> {
-                    jcommander.usage();
-                    yield -1;
-                }
-            };
-        } catch (final ParameterException e) {
-            System.err.println(e.getLocalizedMessage());
-            jcommander.usage();
-            return Integer.MIN_VALUE;
-        }
+        jcommander.setProgramName("ingen");
+        jcommander.parse(args);
+        final var command = jcommander.getParsedCommand();
+        return switch (help || command == null ? "help" : command) {
+            case "help" -> {
+                jcommander.usage("template");
+                yield -1;
+            }
+            case "template" -> {
+                yield template.call();
+            }
+            case "compile" -> {
+                yield compile.call();
+            }
+            default -> {
+                jcommander.usage();
+                yield -1;
+            }
+        };
+
     }
 }
