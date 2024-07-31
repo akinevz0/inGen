@@ -27,18 +27,4 @@ public class CompilerFactoryTest {
         assertEquals("pandoc", pandoc.getCommand());
     }
 
-    // @Test
-    // void testGetLocal() throws IOException {
-    // assertThrows(Exception.class,
-    // () -> CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
-
-    // final var usrBinPandoc = Path.of("/usr/bin/pandoc");
-    // Files.createSymbolicLink(localPandoc, usrBinPandoc);
-
-    // final var compiler = assertDoesNotThrow(() ->
-    // CompilerFactory.getLocal(InstanceType.Pandoc, localPandoc));
-
-    // assertInstanceOf(ICompiler.class, compiler);
-    // }
-
 }
