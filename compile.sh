@@ -1,1 +1,2 @@
-mvn clean compile assembly:single
+#!/bin/sh
+mvn clean compile assembly:single "$@"
